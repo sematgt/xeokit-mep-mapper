@@ -3,20 +3,18 @@ import xeokit from './lib/xeokit-bim-viewer.min.amd.js'
 
 const architectureModelId = getQueryParam('architectureModelId')
 const engineeringModelId = getQueryParam('engineeringModelId')
-launchViewer(architectureModelId, engineeringModelId)
+const bimServiceUrl = getQueryParam('bimServiceUrl')
+launchViewer(architectureModelId, engineeringModelId, bimServiceUrl)
 
-function launchViewer(architectureModelId, engineeringModelId) {
+function launchViewer(architectureModelId, engineeringModelId, bimServiceUrl) {
   const { BIMViewer, Server } = xeokit
-  const { value: building } = await object.getValueAsync('exonProjectId')
-  const BIM_SERVICE_URL_ALIAS = 'ggidf291-2c33-4e3f-ae6f-ceec2e0f8b4b'
-  const bimServiceUrl = await object.factory.getSettings(BIM_SERVICE_URL_ALIAS)
 
   const server = new Server({
     dataDir: `${ bimServiceUrl }/xeokit`,
   })
 
   const bimViewer = new BIMViewer(server, {
-    // canvasElement: document.getElementById("myCanvas"), // WebGL canvas
+    canvasElement: document.getElementById("myCanvas"), // WebGL canvas
     // keyboardEventsElement: document.getElementById("myCanvas"), // Optional, defaults to canvasElement
     // explorerElement: document.getElementById("myExplorer"), // Left panel
     // toolbarElement: document.getElementById("myToolbar"), // Toolbar
@@ -25,22 +23,22 @@ function launchViewer(architectureModelId, engineeringModelId) {
     busyModelBackdropElement: document.getElementById("myViewer"),
   })
 
-  // bimViewer.bimViewer._propertiesInspector.showObjectPropertySets = this.showObjectPropertySets
   this.bimViewer = bimViewer
   this.server = server
   const viewerDiv = document.getElementById('myViewer')
-  return new Promise((resolve, reject) => {
-    bimViewer.loadProject(building,
-      () => {
-        console.log('The project is loaded successfully')
-        viewerDiv.classList.add('models-loaded')
-        resolve()
-      },
-      (errMsg) => {
-        console.log('There was an error loading this project: ' + errMsg)
-        reject(errMsg)
-      })
-  })
+  return Promise.all([ architectureModelId, engineeringModelId ].map((modelId) => (
+    new Promise((resolve, reject) => {
+      bimViewer.loadModel(modelId,
+        () => {
+          console.log(`Model ${modelId} is loaded successfully`)
+          resolve()
+        },
+        (errMsg) => {
+          console.log('There was an error loading this model: ' + modelId + errMsg)
+          reject(errMsg)
+        })
+    })
+  ))).then(() => viewerDiv.classList.add('models-loaded'))
 }
 
 function getQueryParam(name, url) {

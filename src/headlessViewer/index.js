@@ -9,9 +9,10 @@ class HeadlessViewer {
    * 
    * @param {string} architectureModelId 
    * @param {string} engineeringModelId
+   * @param {string} bimServiceUrl
    * @returns {Promise<puppeteer.Page>} page
    */
-  async launch(architectureModelId, engineeringModelId) {
+  async launch(architectureModelId, engineeringModelId, bimServiceUrl) {
     // Using the workaround to run chrome with
     // WebGL enabled
     this.browser = await puppeteer.launch({
@@ -29,7 +30,7 @@ class HeadlessViewer {
     // chrome doesn't support relative path
     const filename = path.resolve(__dirname, './page/viewer.html')
 
-    const url = `file://${filename}?architectureModelId=${architectureModelId}&engineeringModelId=${engineeringModelId}`
+    const url = `file://${filename}?architectureModelId=${architectureModelId}&engineeringModelId=${engineeringModelId}&bimServiceUrl=${bimServiceUrl}`
       
     this.page = await this.browser.newPage()
     this.page.on('error', (error) => console.log(error.message))
