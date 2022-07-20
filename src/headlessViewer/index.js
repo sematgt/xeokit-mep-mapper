@@ -23,6 +23,9 @@ class HeadlessViewer {
         '--mute-audio',
         '--headless',
         '--no-sandbox',
+        '--disable-web-security',
+        '--disable-features=IsolateOrigins',
+        '--disable-site-isolation-trials',
       ]
     })
 

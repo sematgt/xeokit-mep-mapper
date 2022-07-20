@@ -1,4 +1,4 @@
-import xeokit from './lib/xeokit-bim-viewer.min.amd.js'
+// import xeokit from './lib/xeokit-bim-viewer.min.amd.js'
 
 
 const architectureModelId = getQueryParam('architectureModelId')

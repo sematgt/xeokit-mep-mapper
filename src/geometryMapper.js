@@ -24,7 +24,7 @@ class GeometryMapper {
    * }}
    */
   async mapElementsToSpaces() {
-    this.page = await this.viewer.launch(this.architectureModelId, this.engineeringModelId)
+    this.page = await this.viewer.launch(this.architectureModelId, this.engineeringModelId, this.bimServiceUrl)
 
     const bimServiceClient = new BimServiceClient(this.bimServiceUrl)
     const spaces = await bimServiceClient.getAttributes(this.architectureModelId, { 'Category': 'IfcSpace' })
