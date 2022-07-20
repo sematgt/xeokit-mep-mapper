@@ -9,7 +9,8 @@ class GeometryMapper {
    * @param {*} architectureModelId exon model id
    * @param {*} engineeringModelId
    */
-  constructor(architectureModelId, engineeringModelId, bimServiceUrl) {
+  constructor(projectId, architectureModelId, engineeringModelId, bimServiceUrl) {
+    this.projectId = projectId
     this.architectureModelId = architectureModelId
     this.engineeringModelId = engineeringModelId
     this.bimServiceUrl = bimServiceUrl
@@ -24,7 +25,7 @@ class GeometryMapper {
    * }}
    */
   async mapElementsToSpaces() {
-    this.page = await this.viewer.launch(this.architectureModelId, this.engineeringModelId, this.bimServiceUrl)
+    this.page = await this.viewer.launch(this.projectId, this.architectureModelId, this.engineeringModelId, this.bimServiceUrl)
 
     const bimServiceClient = new BimServiceClient(this.bimServiceUrl)
     const spaces = await bimServiceClient.getAttributes(this.architectureModelId, { 'Category': 'IfcSpace' })
