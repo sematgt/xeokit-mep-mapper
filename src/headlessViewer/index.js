@@ -17,7 +17,7 @@ class HeadlessViewer {
     this.browser = await puppeteer.launch({
       dumpio: true,
       headless: false,
-      executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+      // executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
       args: [
         '--hide-scrollbars',
         '--mute-audio',

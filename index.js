@@ -1,3 +1,4 @@
+/*eslint-env node*/
 const GeometryMapper = require('./src/geometryMapper')
 
 
