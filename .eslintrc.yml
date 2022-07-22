@@ -9,7 +9,8 @@ parserOptions:
 rules:
   indent:
     - error
-    - tab
+    - 2
+    - SwitchCase: 1
   linebreak-style:
     - error
     - unix
@@ -21,3 +22,4 @@ rules:
     - never
   no-unused-vars:
     - warn
+  no-trailing-spaces: 1
