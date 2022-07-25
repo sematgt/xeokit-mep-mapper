@@ -1,10 +1,36 @@
 /*eslint-env node*/
+const http = require('http')
 const GeometryMapper = require('./src/geometryMapper')
 
 
-const mapper = new GeometryMapper('ggid6654-a49f-4cdb-b070-6403a5bd8fd3', '62c74edcd12e50fb16153c91', '62c74f5fd12e50fb16153da0', 'http://exploit-bim-gaskar-dev.gaskar.group:9085/api');
+const host = 'localhost'
+const port = 8000
 
-(async () => {
-  const { elementsData } = await mapper.mapElementsToSpaces()
-  console.log(elementsData)
-})()
+const requestListener = async (req, res) => {
+  if (req.url === '/api/mapping' && req.method === 'POST') {
+    const requestData = await new Promise((resolve, reject) => {
+      let requestString = ''
+      req.on('data', chunk => requestString += chunk)
+      req.on('end', () => resolve(JSON.parse(requestString)))
+      req.on('error', (error) => {
+        throw new Error('Failed to parse request body:', error)
+      })
+    })
+
+    const { projectId, architectureModelId, engineeringModelId, bimServiceUrl } = requestData
+    const mapper = new GeometryMapper(projectId, architectureModelId, engineeringModelId, bimServiceUrl)
+    const mappingData = await mapper.mapElementsToSpaces()
+
+    res.setHeader('Content-Type', 'application/json')
+    res.writeHead(200)
+    res.end(mappingData)
+  } else {
+    res.writeHead(400)
+    res.end('Not found')
+  }
+}
+
+const server = http.createServer(requestListener)
+server.listen(port, host, () => {
+  console.log(`Server is running on http://${host}:${port}`)
+})
