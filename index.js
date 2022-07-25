@@ -17,13 +17,13 @@ const requestListener = async (req, res) => {
       })
     })
 
-    const { projectId, architectureModelId, engineeringModelId, bimServiceUrl } = requestData
-    const mapper = new GeometryMapper(projectId, architectureModelId, engineeringModelId, bimServiceUrl)
+    const { exonProjectId, archExonModelId, engExonModelId, bimServiceUrl } = requestData
+    const mapper = new GeometryMapper(exonProjectId, archExonModelId, engExonModelId, bimServiceUrl)
     const mappingData = await mapper.mapElementsToSpaces()
 
     res.setHeader('Content-Type', 'application/json')
     res.writeHead(200)
-    res.end(mappingData)
+    res.end(JSON.stringify(mappingData))
   } else {
     res.writeHead(400)
     res.end('Not found')

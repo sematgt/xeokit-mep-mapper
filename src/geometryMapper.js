@@ -10,10 +10,10 @@ class GeometryMapper {
    * @param {*} architectureModelId exon model id
    * @param {*} engineeringModelId
    */
-  constructor(projectId, architectureModelId, engineeringModelId, bimServiceUrl) {
-    this.projectId = projectId
-    this.architectureModelId = architectureModelId
-    this.engineeringModelId = engineeringModelId
+  constructor(exonProjectId, archExonModelId, engExonModelId, bimServiceUrl) {
+    this.projectId = exonProjectId
+    this.architectureModelId = archExonModelId
+    this.engineeringModelId = engExonModelId
     this.bimServiceUrl = bimServiceUrl
     this.headlessViewer = new HeadlessViewer(bimServiceUrl)
   }
@@ -98,6 +98,7 @@ class GeometryMapper {
           // if (element.architectureStoreyIfcGuid) {
           // 	delete element.architectureStoreyIfcGuid
           // }
+          console.log(elementSpaceId)
           if (elementSpaceId) {
             const existingSpaceVectorLength = spaceVectorLength
             const newSpaceVector = new Vector(spaceBbox.min, spaceBbox.max)
@@ -107,7 +108,7 @@ class GeometryMapper {
               spaceVectorLength = newSpaceVector.length
             }
           } else {
-            elementSpaceId = spaceId
+            elementsData[index].spaceId = spaceId
             mappedElementsCount++
 
             const spaceVector = new Vector(spaceBbox.min, spaceBbox.max)
